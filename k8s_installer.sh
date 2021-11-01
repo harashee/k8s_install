@@ -1,5 +1,9 @@
 #!/bin/bash
 
+$docker="/var/run/docker.sock"
+$containerd="/run/containerd/containerd.sock"
+$crio="/var/run/crio/crio.sock"
+
 display_usage() {
   echo -e "\nUsage: $0 --ver=<k8s version>--cri=containerd --net=calico --role=master|worker\n" 
   echo -e "Example: ./k8s_installer.sh --ver=1.22 --cri=containerd --net=calico --role=master \n" 
@@ -38,12 +42,12 @@ else
         shift
     done
 echo -e "Starting the K8s Installation with below configs"
-echo "===============================================================\n"
+echo "==============================================================="
 echo -e "K8s version ====> ${ver}"
 echo -e "Container runtime ====> ${cri}"
 echo -e "CNI ====> ${net}"
 echo -e "Role ====> ${role}"
-echo "===============================================================\n"
+echo -e "==============================================================="
 
 sudo apt -y install curl apt-transport-https
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -79,24 +83,32 @@ sudo apt install -y curl gnupg2 software-properties-common apt-transport-https c
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt update
-sudo apt install -y containerd.io
-sudo su -
 
-mkdir -p /etc/containerd
-containerd config default>/etc/containerd/config.toml
-sudo systemctl restart containerd
-sudo systemctl enable containerd
-systemctl status  containerd
-sed -i -e 's/systemd_cgroup = false/systemd_cgroup = true/g' /etc/containerd/config.toml
-exit
-
-    if [[ "${VALUE}" != "master" ]]; then
-        exit 1
-    else
+    if [[ "${cri}" == "containerd" ]]; then
+        sudo apt install -y containerd.io
+        sudo su -
+        mkdir -p /etc/containerd
+        containerd config default>/etc/containerd/config.toml
+        sudo systemctl restart containerd
+        sudo systemctl enable containerd
+        systemctl status  containerd
+        sed -i -e 's/systemd_cgroup = false/systemd_cgroup = true/g' /etc/containerd/config.toml
+        exit
+        if [[ "${role}" != "master" ]]; then
+            exit 1
         lsmod | grep br_netfilter
         sudo systemctl enable kubelet
         sudo kubeadm config images pull
-        sudo kubeadm config images pull --cri-socket /run/containerd/containerd.sock
+        sudo kubeadm config images pull --cri-socket ${containerd}
+    fi
+
+
+    else
+
+        if [[ "${cri}" == "containerd" ]]; then
+            sudo kubeadm config images pull --cri-socket /run/containerd/containerd.sock
+        fi
+        
         sudo kubeadm init --kubernetes-version stable-{$ver}.1-00
         kubectl get node -o wide
         mkdir -p $HOME/.kube
