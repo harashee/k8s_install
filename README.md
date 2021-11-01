@@ -1,5 +1,5 @@
 # kubernetes
-This script will help you install Kubernetes with different k8s versio, CNIs and Container runtime.
+This script will help you install Kubernetes with different k8s versions, CNIs and Container runtimes.
 
 I will be adding more CNIs in future.
 
