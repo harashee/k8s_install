@@ -118,7 +118,9 @@ sudo apt update
         sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
         sudo chown $(id -u):$(id -g) $HOME/.kube/config
         kubectl cluster-info
-        kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+        if [[ "${net}" == "calico" ]]; then
+            kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+        fi
         kubectl get node -o wide
 
     fi
