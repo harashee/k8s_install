@@ -95,6 +95,9 @@ sudo apt update
         sed -i -e 's/systemd_cgroup = false/systemd_cgroup = true/g' /etc/containerd/config.toml
         exit
         if [[ "${role}" != "master" ]]; then
+            echo -e "==============================================================="
+            echo -e "Successfully Installed k8s ${ver} ${role} node with ${net} CNI"
+            echo -e "==============================================================="
             exit 1
         lsmod | grep br_netfilter
         sudo systemctl enable kubelet
