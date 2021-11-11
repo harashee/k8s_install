@@ -4,6 +4,9 @@ $docker="/var/run/docker.sock"
 $containerd="/run/containerd/containerd.sock"
 $crio="/var/run/crio/crio.sock"
 
+
+$calico = "https://docs.projectcalico.org/manifests/calico.yaml"
+
 display_usage() {
   echo -e "\nUsage: $0 --ver=<k8s version>--cri=containerd --net=calico --role=master|worker\n" 
   echo -e "Example: ./k8s_installer.sh --ver=1.22 --cri=containerd --net=calico --role=master \n" 
@@ -84,47 +87,23 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt update
 
-    if [[ "${cri}" == "containerd" ]]; then
-        sudo apt install -y containerd.io
-        sudo su -
-        mkdir -p /etc/containerd
-        containerd config default>/etc/containerd/config.toml
-        sudo systemctl restart containerd
-        sudo systemctl enable containerd
-        systemctl status  containerd
-        sed -i -e 's/systemd_cgroup = false/systemd_cgroup = true/g' /etc/containerd/config.toml
-        exit
-        if [[ "${role}" != "master" ]]; then
-            echo -e "==============================================================="
-            echo -e "Successfully Installed k8s ${ver} ${role} node with ${net} CNI"
-            echo -e "==============================================================="
-            exit 1
-        lsmod | grep br_netfilter
-        sudo systemctl enable kubelet
-        sudo kubeadm config images pull
-        sudo kubeadm config images pull --cri-socket ${containerd}
+sudo ./${cri}.sh --sock=${!cri} --role=${role}
+
+
+if [[ "${role}" -eq "master" ]]; then
+    sudo kubeadm init --kubernetes-version stable-{$ver}.1-00
+    kubectl get node -o wide
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    kubectl cluster-info
+    if [[ "${net}" == "calico" ]]; then
+        kubectl apply -f ${!net}
     fi
+    sleep 10
+    kubectl get node -o wide
 
-
-    else
-
-        if [[ "${cri}" == "containerd" ]]; then
-            sudo kubeadm config images pull --cri-socket /run/containerd/containerd.sock
-        fi
-        
-        sudo kubeadm init --kubernetes-version stable-{$ver}.1-00
-        kubectl get node -o wide
-        mkdir -p $HOME/.kube
-        sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-        sudo chown $(id -u):$(id -g) $HOME/.kube/config
-        kubectl cluster-info
-        if [[ "${net}" == "calico" ]]; then
-            kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-        fi
-        kubectl get node -o wide
-
-    fi
+fi
 echo -e "==============================================================="
 echo -e "Successfully Installed k8s ${ver} ${role} node with ${net} CNI"
 echo -e "==============================================================="
-fi
