@@ -4,7 +4,7 @@ display_usage() {
 }
 
 
-if [  $# -ne 3 ] 
+if [  $# -ne 2 ] 
 then 
   display_usage
   exit 1
@@ -31,14 +31,15 @@ else
         esac
         shift
     done
+fi
 sudo apt install -y containerd.io
 sudo su root -c "mkdir -p /etc/containerd"
 sudo su root -c "containerd config default>/etc/containerd/config.toml"
 sudo systemctl restart containerd
 sudo systemctl enable containerd
-systemctl status  containerd
+# systemctl status  containerd
 sudo su root -c "sed -i -e 's/systemd_cgroup = false/systemd_cgroup = true/g' /etc/containerd/config.toml"
-if [[ "${role}" != "master" ]]; then
+if [[ "${role}" -ne "master" ]]; then
     echo -e "==============================================================="
     echo -e "Successfully Installed k8s ${role} node with containerd as container runtime"
     echo -e "==============================================================="
@@ -46,6 +47,5 @@ if [[ "${role}" != "master" ]]; then
 else
     lsmod | grep br_netfilter
     sudo systemctl enable kubelet
-    sudo kubeadm config images pull
     sudo kubeadm config images pull --cri-socket ${sock}
 fi

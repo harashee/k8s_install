@@ -90,7 +90,7 @@ sudo ./${cri}.sh --sock=${!cri} --role=${role}
 
 
 if [[ "${role}" -eq "master" ]]; then
-    sudo kubeadm init --kubernetes-version stable-${ver}.1-00
+    sudo kubeadm init --kubernetes-version stable-${ver}
     kubectl get node -o wide
     mkdir -p $HOME/.kube
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
