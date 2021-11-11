@@ -1,11 +1,9 @@
 #!/bin/bash
 
-$docker="/var/run/docker.sock"
-$containerd="/run/containerd/containerd.sock"
-$crio="/var/run/crio/crio.sock"
-
-
-$calico = "https://docs.projectcalico.org/manifests/calico.yaml"
+docker="/var/run/docker.sock"
+containerd="/run/containerd/containerd.sock"
+crio="/var/run/crio/crio.sock"
+calico="https://docs.projectcalico.org/manifests/calico.yaml"
 
 display_usage() {
   echo -e "\nUsage: $0 --ver=<k8s version>--cri=containerd --net=calico --role=master|worker\n" 
@@ -44,6 +42,7 @@ else
         esac
         shift
     done
+fi
 echo -e "Starting the K8s Installation with below configs"
 echo "==============================================================="
 echo -e "K8s version ====> ${ver}"
@@ -91,7 +90,7 @@ sudo ./${cri}.sh --sock=${!cri} --role=${role}
 
 
 if [[ "${role}" -eq "master" ]]; then
-    sudo kubeadm init --kubernetes-version stable-{$ver}.1-00
+    sudo kubeadm init --kubernetes-version stable-${ver}.1-00
     kubectl get node -o wide
     mkdir -p $HOME/.kube
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config

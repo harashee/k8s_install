@@ -43,9 +43,9 @@ if [[ "${role}" != "master" ]]; then
     echo -e "Successfully Installed k8s ${role} node with containerd as container runtime"
     echo -e "==============================================================="
     exit 1
-fi
 else
     lsmod | grep br_netfilter
     sudo systemctl enable kubelet
     sudo kubeadm config images pull
     sudo kubeadm config images pull --cri-socket ${sock}
+fi
