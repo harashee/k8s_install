@@ -97,7 +97,7 @@ if [[ "${role}" == "master" ]]; then
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
     kubectl cluster-info
     kubectl apply -f ${!net}
-    sleep 10
+    sleep 30
     kubectl get node -o wide
 
 fi
