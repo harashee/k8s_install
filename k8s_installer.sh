@@ -89,16 +89,14 @@ sudo apt update
 sudo ./${cri}.sh --sock=${!cri} --role=${role}
 
 
-if [[ "${role}" -eq "master" ]]; then
+if [[ "${role}" == "master" ]]; then
     sudo kubeadm init --kubernetes-version stable-${ver}
     kubectl get node -o wide
     mkdir -p $HOME/.kube
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
     kubectl cluster-info
-    if [[ "${net}" == "calico" ]]; then
-        kubectl apply -f ${!net}
-    fi
+    kubectl apply -f ${!net}
     sleep 10
     kubectl get node -o wide
 

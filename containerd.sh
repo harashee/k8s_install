@@ -18,7 +18,7 @@ else
                 exit
                 ;;
             -v | --sock)
-                ver=$VALUE
+                sock=$VALUE
                 ;;
             -r | --role)
                 role=$VALUE
@@ -39,7 +39,7 @@ sudo systemctl restart containerd
 sudo systemctl enable containerd
 # systemctl status  containerd
 sudo su root -c "sed -i -e 's/systemd_cgroup = false/systemd_cgroup = true/g' /etc/containerd/config.toml"
-if [[ "${role}" -ne "master" ]]; then
+if [[ "${role}" != "master" ]]; then
     echo -e "==============================================================="
     echo -e "Successfully Installed k8s ${role} node with containerd as container runtime"
     echo -e "==============================================================="
