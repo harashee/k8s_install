@@ -2,7 +2,7 @@
 
 display_usage() {
   echo -e "\nUsage: $0 --sock=<cri socket path> --role=master|worker\n" 
-  echo -e "Example: ./containerd.sh --sock=/run/containerd/containerd.sock --role=master\n" 
+  echo -e "Example: ./containerd.sh --sock=/var/run/docker.sock --role=master\n" 
 }
 
 
@@ -34,16 +34,36 @@ else
         shift
     done
 fi
-sudo apt install -y containerd.io
-sudo su root -c "mkdir -p /etc/containerd"
-sudo su root -c "containerd config default>/etc/containerd/config.toml"
-sudo systemctl restart containerd
-sudo systemctl enable containerd
-# systemctl status  containerd
-sudo su root -c "sed -i -e 's/systemd_cgroup = false/systemd_cgroup = true/g' /etc/containerd/config.toml"
+# Add repo and Install packages
+sudo apt update
+sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update
+sudo apt install -y containerd.io docker-ce docker-ce-cli
+
+# Create required directories
+sudo mkdir -p /etc/systemd/system/docker.service.d
+
+# Create daemon json config file
+sudo tee /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+
+# Start and enable Services
+sudo systemctl daemon-reload 
+sudo systemctl restart docker
+sudo systemctl enable docker
 if [[ "${role}" != "master" ]]; then
     echo -e "==============================================================="
-    echo -e "Successfully Installed k8s ${role} node with containerd as container runtime"
+    echo -e "Successfully Installed k8s ${role} node with docker as container runtime"
     echo -e "==============================================================="
     exit 1
 else
