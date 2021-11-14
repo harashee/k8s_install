@@ -1,7 +1,15 @@
-# kubernetes
-This script will help you install Kubernetes with different k8s versions, CNIs and Container runtimes.
+# kubernetes Installation
+This script will help you install Kubernetes with different k8s versions, CNIs and Container runtime on Ubuntu 20.04
 
 I will be adding more CNIs in future.
+
+# Requirement
+
+```
+Operatig System - Ubuntu 20.04
+Node Requiremt (Master/Worker) - 4 GB and 2 CPU
+
+```
 
 # Example usage:
 
