@@ -58,7 +58,7 @@ sudo curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontain
 
 # Install CRI-O
 sudo apt update
-sudo apt install cri-o cri-o-runc
+sudo apt install cri-o cri-o-runc -y
 
 # Start and enable Service
 sudo systemctl daemon-reload
