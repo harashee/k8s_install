@@ -17,3 +17,11 @@ Node Requiremt (Master/Worker) - 4 GB and 2 CPU
 ./k8s_installer.sh --ver=1.22 --cri=containerd --net=calico --role=master
 
 ```
+
+--ver ==> Kubernetes Version
+
+--cri ==> containerd / cri-o / docker
+
+--net ==> calico / flannel
+
+--role ==> master / worker
