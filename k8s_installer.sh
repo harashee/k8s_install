@@ -88,6 +88,7 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt update
 
+echo -c "sudo ./${cri}.sh --sock=${!cri} --role=${role}"
 sudo ./${cri}.sh --sock=${!cri} --role=${role}
 
 
@@ -98,6 +99,7 @@ if [[ "${role}" == "master" ]]; then
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
     kubectl cluster-info
+    echo -c "Deploying the CNI $net with yaml ==> ${!net}"
     kubectl apply -f ${!net}
     sleep 30
     kubectl get node -o wide
