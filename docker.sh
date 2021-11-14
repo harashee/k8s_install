@@ -2,7 +2,7 @@
 
 display_usage() {
   echo -e "\nUsage: $0 --sock=<cri socket path> --role=master|worker\n" 
-  echo -e "Example: ./containerd.sh --sock=/var/run/docker.sock --role=master\n" 
+  echo -e "Example: ./docker.sh --sock=/var/run/docker.sock --role=master\n" 
 }
 
 

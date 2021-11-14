@@ -1,10 +1,8 @@
 #!/bin/bash
 
-#!/bin/bash
-
 display_usage() {
   echo -e "\nUsage: $0 --sock=<cri socket path> --role=master|worker\n" 
-  echo -e "Example: ./containerd.sh --sock=/var/run/crio/crio.sock --role=master\n" 
+  echo -e "Example: ./crio.sh --sock=/var/run/crio/crio.sock --role=master\n" 
 }
 
 

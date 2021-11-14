@@ -1,9 +1,11 @@
 #!/bin/bash
 
-docker="/var/run/docker.sock"
-containerd="/run/containerd/containerd.sock"
-crio="/var/run/crio/crio.sock"
-calico="https://docs.projectcalico.org/manifests/calico.yaml"
+source k8s_config.cfg
+
+# docker="/var/run/docker.sock"
+# containerd="/run/containerd/containerd.sock"
+# crio="/var/run/crio/crio.sock"
+# calico="https://docs.projectcalico.org/manifests/calico.yaml"
 
 display_usage() {
   echo -e "\nUsage: $0 --ver=<k8s version>--cri=containerd --net=calico --role=master|worker\n" 
