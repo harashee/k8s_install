@@ -22,6 +22,6 @@ Node Requiremt (Master/Worker) - 4 GB and 2 CPU
 
 --cri ==> containerd / cri-o / docker
 
---net ==> calico / flannel
+--net ==> calico / flannel / weavenet
 
 --role ==> master / worker
