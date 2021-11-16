@@ -7,7 +7,7 @@ I will be adding more CNIs in future.
 
 ```
 Operating System - Ubuntu 20.04
-Node Requirement (Master/Worker) - 4 GB and 2 CPUs
+Node Requirement (Master/Worker) - 4 GB RAM and 2 CPUs
 ```
 
 # Example usage:
