@@ -6,17 +6,16 @@ I will be adding more CNIs in future.
 # Requirement
 
 ```
-Operatig System - Ubuntu 20.04
-Node Requiremt (Master/Worker) - 4 GB and 2 CPU
-
+Operating System - Ubuntu 20.04
+Node Requirement (Master/Worker) - 4 GB and 2 CPUs
 ```
 
 # Example usage:
 
 ```
 ./k8s_installer.sh --ver=1.22 --cri=containerd --net=calico --role=master
-
 ```
+Command line supported arguments
 
 --ver ==> Kubernetes Version
 
@@ -25,3 +24,21 @@ Node Requiremt (Master/Worker) - 4 GB and 2 CPU
 --net ==> calico / flannel / weavenet
 
 --role ==> master / worker
+
+# Joining Worker node to K8s Cluster
+
+Get the "kubeadm join" from the master node installation logs. Looks like below.
+
+```
+kubeadm join --discovery-token abcdef.1234567890abcdef --discovery-token-ca-cert-hash sha256:1234..cdef 1.2.3.4:6443
+```
+
+Run the command like above got from the master node in the worker node. You should able to see worker node is in ready state when run the below command in master node.
+
+
+```
+$ kubectl get nodes
+NAME            STATUS   ROLES    AGE    VERSION
+master          Ready    <none>   411d   v1.22.2
+worker1         Ready    <none>   411d   v1.22.2
+```
