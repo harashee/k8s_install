@@ -12,6 +12,8 @@ Node Requirement (Master/Worker) - 4 GB RAM and 2 CPUs
 
 # Example usage:
 
+Run the below command on the master node
+
 ```
 ./k8s_installer.sh --ver=1.22 --cri=containerd --net=calico --role=master
 ```
@@ -24,6 +26,12 @@ Command line supported arguments
 --net ==> calico / flannel / weavenet
 
 --role ==> master / worker
+
+Run the below command on the worker nodes
+
+```
+./k8s_installer.sh --ver=1.22 --cri=containerd --net=calico --role=worker
+```
 
 # Joining Worker node to K8s Cluster
 
