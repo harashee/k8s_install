@@ -93,7 +93,10 @@ sudo ./${cri}.sh --sock=${!cri} --role=${role}
 
 
 if [[ "${role}" == "master" ]]; then
-    sudo kubeadm init --kubernetes-version stable-${ver}
+    if [[ "${net}" == "flannel" ]]; then
+        sudo kubeadm init --kubernetes-version stable-${ver} --pod-network-cidr=10.244.0.0/16
+    else
+        sudo kubeadm init --kubernetes-version stable-${ver}
     kubectl get node -o wide
     mkdir -p $HOME/.kube
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
