@@ -105,7 +105,7 @@ if [[ "${role}" == "master" ]]; then
     kubectl cluster-info
     echo -c "Deploying the CNI $net with yaml ==> ${!net}"
     kubectl apply -f ${!net}
-    sleep 30
+    sleep 60
     kubectl get node -o wide
 
 fi

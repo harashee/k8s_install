@@ -21,7 +21,7 @@ Command line supported arguments
 
 --ver ==> Kubernetes Version
 
---cri ==> containerd / cri-o / docker
+--cri ==> containerd / crio / docker
 
 --net ==> calico / flannel / weavenet
 
