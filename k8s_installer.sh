@@ -107,7 +107,8 @@ if [[ "${role}" == "master" ]]; then
     kubectl apply -f ${!net}
     sleep 60
     kubectl get node -o wide
-
+    curl -sS https://webinstall.dev/k9s | bash
+    source ~/.config/envman/PATH.env
 fi
 echo -e "==============================================================="
 echo -e "Successfully Installed k8s ${ver} ${role} node with ${net} CNI"
