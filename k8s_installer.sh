@@ -104,7 +104,14 @@ if [[ "${role}" == "master" ]]; then
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
     kubectl cluster-info
     echo -c "Deploying the CNI $net with yaml ==> ${!net}"
-    kubectl apply -f ${!net}
+    if [[ "${net}" == "cilium" ]]; then
+            sudo snap install helm --classic
+            helm repo add cilium https://helm.cilium.io/
+            helm repo update
+            helm install cilium cilium/cilium
+    else
+           kubectl apply -f ${!net}
+    fi
     sleep 60
     kubectl get node -o wide
     curl -sS https://webinstall.dev/k9s | bash
