@@ -50,3 +50,20 @@ NAME            STATUS   ROLES    AGE    VERSION
 master          Ready    <none>   411d   v1.22.2
 worker1         Ready    <none>   411d   v1.22.2
 ```
+
+## Verification helper
+
+This repository includes a small helper script `verify.sh` to run basic post-install
+checks (service status, CRI socket presence, swap, `kubectl` status and CNI URL reachability).
+
+Run the helper on the target machine (requires sudo for some checks):
+
+```bash
+cd k8s_install
+sudo bash verify.sh
+# or specify CRI explicitly:
+sudo bash verify.sh --cri containerd
+```
+
+`verify.sh` is non-destructive and prints actionable WARN/INFO lines if it finds
+issues. See `.github/copilot-instructions.md` for more details on common failures.
